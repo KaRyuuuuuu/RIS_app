@@ -31,8 +31,8 @@ CONFIG_FILE = os.path.join(APP_ROOT, "config.ini")
 INSTALLED_STATE = os.path.join(APP_ROOT, "installed.json")
 
 # URLs distantes (à modifier par tes liens GitHub Pages)
-DEFAULT_MANIFEST_URL = "https://karyuuuuuu.github.io/manifest.json"
-DEFAULT_CATALOG_URL  = "https://karyuuuuuu.github.io/catalog.json"
+DEFAULT_MANIFEST_URL = "https://karyuuuuuu.github.io/RIS_app/manifest.json"
+DEFAULT_CATALOG_URL  = "https://karyuuuuuu.github.io/RIS_app/catalog.json"
 
 # =========================
 # 📦 Fonctions utilitaires
