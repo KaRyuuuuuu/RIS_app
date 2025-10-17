@@ -2,7 +2,7 @@
   "catalog_version": "1.0.1",
   "apps": [
     {
-      "name": "Pit Windows Calculator",
+      "name": "PitWindowCalculator",
       "title": "Pit Windows Calculator",
       "version": "0.1.0",
       "description": "Calcul des fenêtres de pit toutes les 40 min ±10 min.",
