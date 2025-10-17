@@ -1,12 +1,12 @@
 {
-  "catalog_version": "1.0.0",
+  "catalog_version": "1.0.1",
   "apps": [
     {
-      "name": "chronos",
-      "title": "Chronos — Pit Windows",
+      "name": "Pit Windows Calculator",
+      "title": "Pit Windows Calculator",
       "version": "0.1.0",
       "description": "Calcul des fenêtres de pit toutes les 40 min ±10 min.",
-      "url": "https://KaRyuuuuuu.github.io/RIS_app/downloads/plugins/chronos-0.1.0.zip",
+      "url": "https://KaRyuuuuuu.github.io/RIS_app/downloads/plugins/PitWindowCalculator-0.1.0.zip",
       "sha256": ""
     }
   ]
