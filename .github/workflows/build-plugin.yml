@@ -1,0 +1,104 @@
+name: Build plugin ZIP and publish to Pages
+
+on:
+  push:
+    paths:
+      - "plugins/**"
+      - "catalog.json"
+      - ".github/workflows/build-plugin.yml"
+    branches: [ main ]
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  build-plugin:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1) Checkout
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 2) Définir le nom du plugin à partir du chemin modifié (simple et efficace)
+      #    -> si tu as plusieurs plugins, on récupère le premier dossier modifié sous plugins/
+      - name: Detect changed plugin
+        id: detect
+        run: |
+          set -e
+          CHANGED=$(git diff --name-only HEAD~1 HEAD | grep '^plugins/' | cut -d'/' -f2 | sort -u | head -n1 || true)
+          if [ -z "$CHANGED" ]; then
+            echo "No plugin change detected."
+            echo "plugin=" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          echo "Detected plugin: $CHANGED"
+          echo "plugin=$CHANGED" >> $GITHUB_OUTPUT
+
+      - name: Stop if no plugin touched
+        if: steps.detect.outputs.plugin == ''
+        run: echo "No plugin touched, skipping."
+
+      # 3) Lire la version dans plugins/<name>/version.txt
+      - name: Read version
+        id: ver
+        if: steps.detect.outputs.plugin != ''
+        run: |
+          set -e
+          PLUGIN="${{ steps.detect.outputs.plugin }}"
+          VER=$(tr -d '\r' < "plugins/$PLUGIN/version.txt")
+          echo "version=$VER" >> $GITHUB_OUTPUT
+
+      # 4) Construire le ZIP dans downloads/<plugin>-<version>.zip
+      - name: Build ZIP
+        if: steps.detect.outputs.plugin != ''
+        run: |
+          set -e
+          PLUGIN="${{ steps.detect.outputs.plugin }}"
+          VER="${{ steps.ver.outputs.version }}"
+          mkdir -p downloads
+          (cd plugins/$PLUGIN && zip -r "../../downloads/${PLUGIN}-${VER}.zip" .)
+          ls -l downloads
+
+      # 5) Mettre à jour automatiquement catalog.json (remplace version & url pour ce plugin)
+      - name: Update catalog.json
+        if: steps.detect.outputs.plugin != ''
+        run: |
+          set -e
+          PLUGIN="${{ steps.detect.outputs.plugin }}"
+          VER="${{ steps.ver.outputs.version }}"
+          URL="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/downloads/${PLUGIN}-${VER}.zip"
+        env:
+          PLUGIN: ${{ steps.detect.outputs.plugin }}
+          VER: ${{ steps.ver.outputs.version }}
+          URL: ${{ env.URL }}
+
+      # 6) Commit/Push des fichiers générés (downloads/ + catalog.json) sur la branche
+      - name: Commit changes
+        if: steps.detect.outputs.plugin != ''
+        run: |
+          set -e
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add downloads catalog.json
+          git commit -m "build(plugin): ${{ steps.detect.outputs.plugin }} v${{ steps.ver.outputs.version }} -> downloads & catalog.json" || echo "Nothing to commit"
+          git push
+
+      # 7) Préparer l’artefact Pages (publie tout le repo — pratique si ton Pages pointe sur / root)
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+  deploy:
+    needs: build-plugin
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
