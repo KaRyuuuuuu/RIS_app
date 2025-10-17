@@ -31,8 +31,8 @@ CONFIG_FILE = os.path.join(APP_ROOT, "config.ini")
 INSTALLED_STATE = os.path.join(APP_ROOT, "installed.json")
 
 # URLs distantes (à modifier par tes liens GitHub Pages)
-DEFAULT_MANIFEST_URL = "https://exemple.github.io/multiapp/manifest.json"
-DEFAULT_CATALOG_URL  = "https://exemple.github.io/multiapp/catalog.json"
+DEFAULT_MANIFEST_URL = "https://karyuuuuuu.github.io/manifest.json"
+DEFAULT_CATALOG_URL  = "https://karyuuuuuu.github.io/catalog.json"
 
 # =========================
 # 📦 Fonctions utilitaires
