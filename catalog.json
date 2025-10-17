@@ -1,0 +1,21 @@
+{
+  "catalog_version": "1.0.0",
+  "apps": [
+    {
+      "name": "chronos",
+      "title": "Chronos — Pit Windows",
+      "version": "0.1.0",
+      "description": "Calculateur de fenêtres de pit toutes les 40 min ±10 min",
+      "url": "file:///C:/Users/<TON_USER>/KaRyuuMultiApp/downloads/chronos-0.1.0.zip",
+      "sha256": ""
+    },
+    {
+      "name": "scanner",
+      "title": "Scanner réseau",
+      "version": "0.1.0",
+      "description": "Découverte simple des IP locales et ping automatique.",
+      "url": "file:///C:/Users/<TON_USER>/KaRyuuMultiApp/downloads/scanner-0.1.0.zip",
+      "sha256": ""
+    }
+  ]
+}
